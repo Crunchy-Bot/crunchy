@@ -1,4 +1,3 @@
-import pprint
 from enum import Enum
 
 from roid import (
@@ -39,7 +38,6 @@ async def check_channel_type(interaction: Interaction):
 
     If it's not then a error message is raised and returned back to the user.
     """
-    pprint.pprint(interaction.dict())
 
     if interaction.data.options is None:
         raise NOT_ENOUGH_DATA
@@ -139,7 +137,6 @@ async def submit_webhook(
         "guild_id": str(guild_id),
         "webhook_url": webhook_url,
     }
-    print(payload)
 
     await app.client.request("POST", f"/events/{sub_type.value}/update", json=payload)
 
