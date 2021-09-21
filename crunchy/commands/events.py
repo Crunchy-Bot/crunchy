@@ -219,13 +219,19 @@ async def add_release_channel(
 
 @events_blueprint.button("🚀 Test", style=ButtonStyle.PRIMARY, oneshot=True)
 async def test_button(app: CommandHandler, ctx: InvokeContext):
+    """
+    A button that sends a test POST request to the webhook with a test message.
+
+    If The request fails the error handler takes care of the responses otherwise
+    it responds as a sucess.
+    """
     try:
         channel_id = ctx["channel_id"]
         webhook_url = ctx["webook_url"]
     except KeyError:
         return Response(
             content=(
-                f"Oops! Something has gone awfully wrong, "
+                f"Oops! Something has gone awfully wrong in the (events:test_button:KeyError) handler, "
                 f"please contact the developer @ {SUPPORT_SERVER_URL}"
             )
         )
