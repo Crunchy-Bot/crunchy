@@ -8,7 +8,7 @@ from roid import (
     ButtonStyle,
     InvokeContext,
 )
-from roid.objects import Channel, ChannelType, MemberPermissions
+from roid.objects import Channel, ChannelType, MemberPermissions as MemberPerms
 from roid.helpers import check, require_user_permissions
 from roid.exceptions import AbortInvoke, Forbidden, NotFound, DiscordServerError
 
@@ -16,6 +16,7 @@ from crunchy.app import CommandHandler
 from crunchy.tools import assetloader
 from crunchy.config import DISCORD_API, SUPPORT_SERVER_URL
 
+REQUIRED_PERMISSIONS = MemberPerms.MANAGE_GUILD | MemberPerms.MANAGE_WEBHOOKS
 NOT_ENOUGH_DATA = AbortInvoke(
     content="<:HimeSad:676087829557936149> Oops! You've not given me enough information to work with here.",
     flags=ResponseFlags.EPHEMERAL,
@@ -141,9 +142,7 @@ async def submit_webhook(
     await app.client.request("POST", f"/events/{sub_type.value}/update", json=payload)
 
 
-@require_user_permissions(
-    MemberPermissions.MANAGE_GUILD | MemberPermissions.MANAGE_WEBHOOKS
-)
+@require_user_permissions(REQUIRED_PERMISSIONS)
 @check(check_channel_type)
 @events_blueprint.command(
     "add-news-channel",
@@ -182,9 +181,7 @@ async def add_news_channel(
     )
 
 
-@require_user_permissions(
-    MemberPermissions.MANAGE_GUILD | MemberPermissions.MANAGE_WEBHOOKS
-)
+@require_user_permissions(REQUIRED_PERMISSIONS)
 @check(check_channel_type)
 @events_blueprint.command(
     "add-release-channel",
