@@ -1,8 +1,11 @@
+import pprint
+
 from roid import CommandsBlueprint, Response, ResponseFlags, Interaction
 from roid.objects import Channel, ChannelType
 from roid.helpers import check
 from roid.exceptions import AbortInvoke
 
+from crunchy.app import CommandHandler
 
 events_blueprint = CommandsBlueprint()
 
@@ -13,6 +16,13 @@ NOT_ENOUGH_DATA = AbortInvoke(
 
 
 async def check_channel_type(interaction: Interaction):
+    """
+    Checks if the mentioned channel type is correct or not.
+
+    If it's not then a error message is raised and returned back to the user.
+    """
+    pprint.pprint(interaction.dict())
+
     if interaction.data.options is None:
         raise NOT_ENOUGH_DATA
 
@@ -53,7 +63,14 @@ async def check_channel_type(interaction: Interaction):
     ),
     defer_register=False,
 )
-async def add_news_channel(channel: Channel) -> Response:
+async def add_news_channel(app: CommandHandler, channel: Channel) -> Response:
+
+    await app.http.request(
+        "POST",
+        f"/channels/{channel.id}/webhooks",
+        pass_token=True,
+        json={"Crunchy Anime News"},
+    )
 
     return Response(
         content=(
@@ -73,7 +90,15 @@ async def add_news_channel(channel: Channel) -> Response:
     ),
     defer_register=False,
 )
-async def add_news_channel(channel: Channel) -> Response:
+async def add_news_channel(app: CommandHandler, channel: Channel) -> Response:
+
+    await app.http.request(
+        "POST",
+        f"/channels/{channel.id}/webhooks",
+        pass_token=True,
+        json={"Crunchy Anime Releases"},
+    )
+
     return Response(
         content=(
             f"<:exitment:717784139641651211> All done! I'll send news to "
