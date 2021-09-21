@@ -4,6 +4,8 @@ import uvicorn
 from roid import SlashCommands
 from roid.state import RedisBackend
 
+from crunchy.commands import events_blueprint
+
 
 app = SlashCommands(
     application_id=int(os.getenv("APPLICATION_ID")),
@@ -16,8 +18,11 @@ app = SlashCommands(
     ),
 )
 
+app.add_blueprint(events_blueprint)
+
 
 def main():
+    app.register_commands_on_start()
     uvicorn.run("crunchy:app")
 
 
