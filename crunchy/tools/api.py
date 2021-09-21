@@ -19,7 +19,7 @@ class CrunchyApi:
         self.lock = asyncio.Lock()
         self.client = httpx.AsyncClient(http2=True)
 
-        self.__token = api_token
+        self.__token = api_token or ""
 
     async def shutdown(self):
         await self.client.aclose()

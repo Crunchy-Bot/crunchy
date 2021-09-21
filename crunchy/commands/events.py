@@ -139,6 +139,7 @@ async def submit_webhook(
         "guild_id": str(guild_id),
         "webhook_url": webhook_url,
     }
+    print(payload)
 
     await app.client.request("POST", f"/events/{sub_type.value}/update", json=payload)
 
