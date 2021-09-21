@@ -1,10 +1,16 @@
 import uvicorn
 
+from roid.exceptions import DiscordServerError, HTTPException
+
 from crunchy.commands import events_blueprint
 from crunchy.app import CommandHandler
 from crunchy import config
 from crunchy.tools.api import CrunchyApiHTTPException
-from crunchy.global_error_handlers import on_crunchy_api_error
+from crunchy.global_error_handlers import (
+    on_crunchy_api_error,
+    on_discord_server_error,
+    on_http_error,
+)
 
 app = CommandHandler(
     application_id=config.APPLICATION_ID,
@@ -15,6 +21,8 @@ app = CommandHandler(
 )
 
 app.register_error(CrunchyApiHTTPException, on_crunchy_api_error)
+app.register_error(DiscordServerError, on_discord_server_error)
+app.register_error(HTTPException, on_http_error)
 
 app.add_blueprint(events_blueprint)
 
