@@ -8,10 +8,11 @@ from crunchy.app import CommandHandler
 from crunchy import config
 
 app = CommandHandler(
-    application_id=config.application_id,
-    application_public_key=config.application_public_key,
-    token=config.token,
-    state_backend=config.state_backend,
+    application_id=config.APPLICATION_ID,
+    application_public_key=config.APPLICATION_PUBLIC_KEY,
+    token=config.TOKEN,
+    state_backend=config.STATE_BACKEND,
+    crunchy_api_key=config.CRUNCHY_API_KEY,
 )
 
 app.add_blueprint(events_blueprint)

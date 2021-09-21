@@ -3,17 +3,20 @@ import pprint
 from roid import CommandsBlueprint, Response, ResponseFlags, Interaction
 from roid.objects import Channel, ChannelType
 from roid.helpers import check
-from roid.exceptions import AbortInvoke, Forbidden, HTTPException, NotFound
+from roid.exceptions import AbortInvoke, Forbidden
 
 from crunchy.app import CommandHandler
 from crunchy.tools import assetloader
+from crunchy.config import DISCORD_API
 
-events_blueprint = CommandsBlueprint()
 
 NOT_ENOUGH_DATA = AbortInvoke(
     content="<:HimeSad:676087829557936149> Oops! You've not given me enough information to work with here.",
     flags=ResponseFlags.EPHEMERAL,
 )
+
+
+events_blueprint = CommandsBlueprint()
 
 
 async def check_channel_type(interaction: Interaction):
@@ -55,6 +58,32 @@ async def check_channel_type(interaction: Interaction):
     return interaction
 
 
+async def get_webhook_url(app: CommandHandler, channel: Channel, sub_type: str) -> str:
+    avatar = assetloader.get_base64_asset("crunchy-128.webp")
+    data = await app.http.request(
+        "POST",
+        f"/channels/{channel.id}/webhooks",
+        pass_token=True,
+        json={
+            "name": f"Crunchy Anime {sub_type}",
+            "avatar": f"data:image/webp;base64,{avatar}",
+        },
+    )
+
+    return f"{DISCORD_API}/webhooks/{data['id']}/{data['token']}"
+
+
+async def submit_webhook(
+    app: CommandHandler, target: str, guild_id: int, webhook_url: str
+):
+    payload = {
+        "guild_id": str(guild_id),
+        "webhook_url": webhook_url,
+    }
+
+    await app.client.request("POST", f"/events/{target}/update", json=payload)
+
+
 @check(check_channel_type)
 @events_blueprint.command(
     "add-news-channel",
@@ -64,24 +93,22 @@ async def check_channel_type(interaction: Interaction):
     ),
     defer_register=False,
 )
-async def add_news_channel(app: CommandHandler, channel: Channel) -> Response:
+async def add_news_channel(
+    app: CommandHandler, interaction: Interaction, channel: Channel
+) -> Response:
+    url = await get_webhook_url(app, channel, "News")
 
-    avatar = assetloader.get_base64_asset("crunchy-128.webp")
-    data = await app.http.request(
-        "POST",
-        f"/channels/{channel.id}/webhooks",
-        pass_token=True,
-        json={
-            "name": "Crunchy Anime News",
-            "avatar": f"data:image/webp;base64,{avatar}",
-        },
+    await submit_webhook(
+        app=app,
+        target="news",
+        guild_id=interaction.guild_id,
+        webhook_url=url,
     )
-    print(data)
 
     return Response(
         content=(
             f"<:exitment:717784139641651211> All done! I'll send"
-            f" news to <#{channel.id}> when I get some news."
+            f" to <#{channel.id}> when I get some news."
         ),
         flags=ResponseFlags.EPHEMERAL,
     )
@@ -96,22 +123,21 @@ async def add_news_channel(app: CommandHandler, channel: Channel) -> Response:
     ),
     defer_register=False,
 )
-async def add_release_channel(app: CommandHandler, channel: Channel) -> Response:
+async def add_release_channel(
+    app: CommandHandler, interaction: Interaction, channel: Channel
+) -> Response:
+    url = await get_webhook_url(app, channel, "Releases")
 
-    avatar = assetloader.get_base64_asset("crunchy-128.webp")
-    await app.http.request(
-        "POST",
-        f"/channels/{channel.id}/webhooks",
-        pass_token=True,
-        json={
-            "name": "Crunchy Anime News",
-            "avatar": f"data:image/webp;base64,{avatar}",
-        },
+    await submit_webhook(
+        app=app,
+        target="releases",
+        guild_id=interaction.guild_id,
+        webhook_url=url,
     )
 
     return Response(
         content=(
-            f"<:exitment:717784139641651211> All done! I'll send news to "
+            f"<:exitment:717784139641651211> All done! I'll send to "
             f"<#{channel.id}> when a new Anime episode is out!"
         ),
         flags=ResponseFlags.EPHEMERAL,
