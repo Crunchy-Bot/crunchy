@@ -3,9 +3,10 @@ import pprint
 from roid import CommandsBlueprint, Response, ResponseFlags, Interaction
 from roid.objects import Channel, ChannelType
 from roid.helpers import check
-from roid.exceptions import AbortInvoke
+from roid.exceptions import AbortInvoke, Forbidden, HTTPException, NotFound
 
 from crunchy.app import CommandHandler
+from crunchy.tools import assetloader
 
 events_blueprint = CommandsBlueprint()
 
@@ -65,12 +66,17 @@ async def check_channel_type(interaction: Interaction):
 )
 async def add_news_channel(app: CommandHandler, channel: Channel) -> Response:
 
-    await app.http.request(
+    avatar = assetloader.get_base64_asset("crunchy-128.webp")
+    data = await app.http.request(
         "POST",
         f"/channels/{channel.id}/webhooks",
         pass_token=True,
-        json={"Crunchy Anime News"},
+        json={
+            "name": "Crunchy Anime News",
+            "avatar": f"data:image/webp;base64,{avatar}",
+        },
     )
+    print(data)
 
     return Response(
         content=(
@@ -90,13 +96,17 @@ async def add_news_channel(app: CommandHandler, channel: Channel) -> Response:
     ),
     defer_register=False,
 )
-async def add_news_channel(app: CommandHandler, channel: Channel) -> Response:
+async def add_release_channel(app: CommandHandler, channel: Channel) -> Response:
 
+    avatar = assetloader.get_base64_asset("crunchy-128.webp")
     await app.http.request(
         "POST",
         f"/channels/{channel.id}/webhooks",
         pass_token=True,
-        json={"Crunchy Anime Releases"},
+        json={
+            "name": "Crunchy Anime News",
+            "avatar": f"data:image/webp;base64,{avatar}",
+        },
     )
 
     return Response(
@@ -106,3 +116,18 @@ async def add_news_channel(app: CommandHandler, channel: Channel) -> Response:
         ),
         flags=ResponseFlags.EPHEMERAL,
     )
+
+
+@add_news_channel.error
+@add_release_channel.error
+async def on_command_error(_: Interaction, e: Exception):
+    if isinstance(e, Forbidden):
+        return Response(
+            content=(
+                "<:HimeSad:676087829557936149> Oops! Looks like I'm missing permissions "
+                "to do this. Make sure I have the permission `MANAGE_WEBHOOKS` and try again."
+            ),
+            flags=ResponseFlags.EPHEMERAL,
+        )
+
+    raise e
