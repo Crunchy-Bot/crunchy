@@ -1,15 +1,21 @@
 import pprint
 from enum import Enum
 
-from roid import CommandsBlueprint, Response, ResponseFlags, Interaction
+from roid import (
+    CommandsBlueprint,
+    Response,
+    ResponseFlags,
+    Interaction,
+    ButtonStyle,
+    InvokeContext,
+)
 from roid.objects import Channel, ChannelType
 from roid.helpers import check
-from roid.exceptions import AbortInvoke, Forbidden
+from roid.exceptions import AbortInvoke, Forbidden, NotFound, DiscordServerError
 
 from crunchy.app import CommandHandler
 from crunchy.tools import assetloader
-from crunchy.config import DISCORD_API
-
+from crunchy.config import DISCORD_API, SUPPORT_SERVER_URL
 
 NOT_ENOUGH_DATA = AbortInvoke(
     content="<:HimeSad:676087829557936149> Oops! You've not given me enough information to work with here.",
@@ -58,7 +64,7 @@ async def check_channel_type(interaction: Interaction):
         raise AbortInvoke(
             content=(
                 "<:HimeSad:676087829557936149> Oops! I cant add a webhook to "
-                "this channel. Make sure it's a guild text channel and try again!"
+                "this channel. Make sure it's a guild text channel and not a thread or direct message."
             ),
             flags=ResponseFlags.EPHEMERAL,
         )
@@ -170,6 +176,8 @@ async def add_news_channel(
             f" to <#{channel.id}> when I get some news."
         ),
         flags=ResponseFlags.EPHEMERAL,
+        components=[[test_button]],
+        component_context={"channel_id": channel.id, "webhook_url": url},
     )
 
 
@@ -206,7 +214,57 @@ async def add_release_channel(
             f"<#{channel.id}> when a new Anime episode is out!"
         ),
         flags=ResponseFlags.EPHEMERAL,
+        components=[[test_button]],
+        component_context={"channel_id": channel.id, "webhook_url": url},
     )
+
+
+@events_blueprint.button("🚀 Test", style=ButtonStyle.PRIMARY, oneshot=True)
+async def test_button(app: CommandHandler, ctx: InvokeContext):
+    try:
+        channel_id = ctx["channel_id"]
+        webhook_url = ctx["webook_url"]
+    except KeyError:
+        return Response(
+            content=(
+                f"Oops! Something has gone awfully wrong, "
+                f"please contact the developer @ {SUPPORT_SERVER_URL}"
+            )
+        )
+
+    await app.http.request(
+        "POST",
+        f"{webhook_url}?wait=true",
+        pass_token=False,
+        json={"content": "🚀 Testing, testing, I think we're ready!"},
+    )
+
+    return Response(
+        content=f"I've sent a test message! If it appears in <#{channel_id}>",
+        flags=ResponseFlags.EPHEMERAL,
+    )
+
+
+@test_button.error
+async def on_button_error(_: Interaction, e: Exception):
+    if isinstance(e, NotFound):
+        return Response(
+            content=(
+                "<:HimeSad:676087829557936149> Weird!? This webhook seems to have "
+                "been delete between me creating and you clicking the test button!"
+            ),
+            flags=ResponseFlags.EPHEMERAL,
+        )
+
+    if isinstance(e, DiscordServerError):
+        return Response(
+            content=(
+                "<:HimeSad:676087829557936149> Oh no! Discord seem to be having some "
+                "issues right now, this doesn't mean your event feed hasn't been "
+                "added it just means we aren't able to test it right now."
+            ),
+            flags=ResponseFlags.EPHEMERAL,
+        )
 
 
 @add_news_channel.error

@@ -38,7 +38,8 @@ class HttpHandler:
         if headers is not None:
             set_headers = {**headers, **set_headers}
 
-        url = f"{DISCORD_API}{section}"
+        if not section.startswith(DISCORD_API):
+            url = f"{DISCORD_API}{section}"
 
         await self.lock.acquire()
         with MaybeUnlock(self.lock) as lock:

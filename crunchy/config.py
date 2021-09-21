@@ -15,3 +15,5 @@ CRUNCHY_API_KEY = os.getenv("CRUNCHY_API_KEY")
 
 CRUNCHY_API = "https://api.crunchy.gg/v0"
 DISCORD_API = "https://discord.com/api/v8"
+
+SUPPORT_SERVER_URL = "https://discord.gg/MtETshQ"
