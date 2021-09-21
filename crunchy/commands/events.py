@@ -8,8 +8,8 @@ from roid import (
     ButtonStyle,
     InvokeContext,
 )
-from roid.objects import Channel, ChannelType
-from roid.helpers import check
+from roid.objects import Channel, ChannelType, MemberPermissions
+from roid.helpers import check, require_user_permissions
 from roid.exceptions import AbortInvoke, Forbidden, NotFound, DiscordServerError
 
 from crunchy.app import CommandHandler
@@ -141,6 +141,9 @@ async def submit_webhook(
     await app.client.request("POST", f"/events/{sub_type.value}/update", json=payload)
 
 
+@require_user_permissions(
+    MemberPermissions.MANAGE_GUILD | MemberPermissions.MANAGE_WEBHOOKS
+)
 @check(check_channel_type)
 @events_blueprint.command(
     "add-news-channel",
@@ -179,6 +182,9 @@ async def add_news_channel(
     )
 
 
+@require_user_permissions(
+    MemberPermissions.MANAGE_GUILD | MemberPermissions.MANAGE_WEBHOOKS
+)
 @check(check_channel_type)
 @events_blueprint.command(
     "add-release-channel",
