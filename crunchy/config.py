@@ -17,3 +17,9 @@ CRUNCHY_API = "https://api.crunchy.gg/v0"
 DISCORD_API = "https://discord.com/api/v8"
 
 SUPPORT_SERVER_URL = "https://discord.gg/MtETshQ"
+REQUIRED_PERMISSIONS = [
+    "Change nickname",
+    "Manage webhooks",
+    "Embed links",
+    "Use external Emojis",
+]

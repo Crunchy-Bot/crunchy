@@ -16,3 +16,6 @@ class CommandHandler(SlashCommands):
 
         self.http = http.HttpHandler(token)
         self.client = api.CrunchyApi(crunchy_api_key)
+
+        self.on_event("shutdown")(self.http.shutdown)
+        self.on_event("shutdown")(self.client.shutdown)
