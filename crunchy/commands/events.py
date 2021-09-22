@@ -230,7 +230,7 @@ async def test_button(app: CommandHandler, ctx: InvokeContext):
     """
     try:
         channel_id = ctx["channel_id"]
-        webhook_url = ctx["webook_url"]
+        webhook_url = ctx["webhook_url"]
     except KeyError:
         return Response(
             content=(
