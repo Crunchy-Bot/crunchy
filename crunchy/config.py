@@ -24,10 +24,10 @@ REQUIRED_PERMISSIONS = [
     "Use external Emojis",
 ]
 
-EMBED_COLOUR = 0xe87e15
+EMBED_COLOUR = 0xE87E15
 RANDOM_THUMBNAILS = [
-    'https://cdn.discordapp.com/attachments/680350705038393344/717784208075915274/exitment.png',
-    'https://cdn.discordapp.com/attachments/680350705038393344/717784643117777006/wow.png',
-    'https://cdn.discordapp.com/attachments/680350705038393344/717784215986634953/cheeky.png',
-    'https://cdn.discordapp.com/attachments/680350705038393344/717784211771097179/thank_you.png',
+    "https://cdn.discordapp.com/attachments/680350705038393344/717784208075915274/exitment.png",
+    "https://cdn.discordapp.com/attachments/680350705038393344/717784643117777006/wow.png",
+    "https://cdn.discordapp.com/attachments/680350705038393344/717784215986634953/cheeky.png",
+    "https://cdn.discordapp.com/attachments/680350705038393344/717784211771097179/thank_you.png",
 ]
