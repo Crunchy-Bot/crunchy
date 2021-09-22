@@ -55,7 +55,6 @@ async def search_anime(app: CommandHandler, interaction: Interaction, query: str
     else:
         user = interaction.member.user
 
-    print(user.avatar_url)
     embed.set_footer(
         text="Part of Crunchy, the Crunchyroll Discord bot. Powered by CF8",
         icon_url=user.avatar_url
