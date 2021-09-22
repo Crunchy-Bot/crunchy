@@ -2,7 +2,7 @@ import uvicorn
 
 from roid.exceptions import DiscordServerError, Forbidden, HTTPException
 
-from crunchy.commands import events_blueprint
+from crunchy.commands import events_blueprint, search_blueprint
 from crunchy.app import CommandHandler
 from crunchy import config
 from crunchy.tools.api import CrunchyApiHTTPException
@@ -27,6 +27,7 @@ app.register_error(Forbidden, on_missing_permissions_error)
 app.register_error(HTTPException, on_http_error)
 
 app.add_blueprint(events_blueprint)
+app.add_blueprint(search_blueprint)
 
 
 def main():

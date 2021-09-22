@@ -302,14 +302,6 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
-name = "pathlib"
-version = "1.0.1"
-description = "Object-oriented filesystem paths"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "pathspec"
 version = "0.9.0"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -403,7 +395,7 @@ idna2008 = ["idna"]
 
 [[package]]
 name = "roid"
-version = "0.4.1"
+version = "0.5.0"
 description = "A fast, stateless http slash commands framework for scale. Built by the Crunchy bot team."
 category = "main"
 optional = false
@@ -493,7 +485,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "f935f004f90f0b2bd5b233343d345bac00f1c1ef4e129914216fce2b729b9ffe"
+content-hash = "22c4946e8a0f229ab971b934b67e6c320e6f9f9930b2dd83d5d309f55de3a596"
 
 [metadata.files]
 aiohttp = [
@@ -728,9 +720,6 @@ orjson = [
     {file = "orjson-3.6.3-cp39-none-win_amd64.whl", hash = "sha256:720a7d7ba1dcf32bbd8fb380370b1fdd06ed916caea48403edd64f2ccf7883c1"},
     {file = "orjson-3.6.3.tar.gz", hash = "sha256:353cc079cedfe990ea2d2186306f766e0d47bba63acd072e22d6df96c67be993"},
 ]
-pathlib = [
-    {file = "pathlib-1.0.1.tar.gz", hash = "sha256:6940718dfc3eff4258203ad5021090933e5c04707d5ca8cc9e73c94a7894ea9f"},
-]
 pathspec = [
     {file = "pathspec-0.9.0-py2.py3-none-any.whl", hash = "sha256:7d15c4ddb0b5c802d161efc417ec1a2558ea2653c2e8ad9c19098201dc1c993a"},
     {file = "pathspec-0.9.0.tar.gz", hash = "sha256:e564499435a2673d586f6b2130bb5b95f04a3ba06f81b8f895b651a3c76aabb1"},
@@ -839,7 +828,7 @@ rfc3986 = [
     {file = "rfc3986-1.5.0.tar.gz", hash = "sha256:270aaf10d87d0d4e095063c65bf3ddbc6ee3d0b226328ce21e036f946e421835"},
 ]
 roid = [
-    {file = "roid-0.4.1.tar.gz", hash = "sha256:b7a6edc46dc28ca579e1e6602b26e18d8801aca372250d262736701da71b5e21"},
+    {file = "roid-0.5.0.tar.gz", hash = "sha256:bd868b82835e9053b4e843bbd31180ff206bd262da486ee40ae3ac0856583571"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
