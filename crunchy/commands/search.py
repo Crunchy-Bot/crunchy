@@ -4,7 +4,7 @@ import textwrap
 from roid import (
     CommandsBlueprint,
     Response,
-    Embed,
+    Embed, Option,
 )
 from roid.objects import CompletedOption, EmbedImage
 from roid.interactions import OptionData, Interaction
@@ -23,7 +23,7 @@ search_blueprint = CommandsBlueprint()
 async def search_anime(
     app: CommandHandler,
     interaction: Interaction,
-    query: str,
+    query: str = Option(description="Search for the anime you want here.", autocomplete=True),
 ):
     results = await app.client.request(
         "GET",
