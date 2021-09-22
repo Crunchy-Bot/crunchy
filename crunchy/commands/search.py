@@ -55,13 +55,14 @@ async def get_best_anime_result(
     genres = ", ".join(genres or ["None"])
 
     embed = Embed(color=EMBED_COLOUR)
+    embed.set_thumbnail(url=random.choice(RANDOM_THUMBNAILS))
     embed.set_author(
         name=f"{textwrap.shorten(title.strip(' '), width=100)}",
         icon_url="https://cdn.discordapp.com/emojis/676087821596885013.png?v=1",
     )
 
     if img_url is not None:
-        embed.set_thumbnail(url=img_url)
+        embed.set_image(url=img_url)
 
     if interaction.member is None:
         user = interaction.user
