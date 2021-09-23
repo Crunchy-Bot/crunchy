@@ -1,4 +1,5 @@
 import uvicorn
+import logging
 
 from roid.exceptions import DiscordServerError, Forbidden, HTTPException
 
@@ -12,6 +13,8 @@ from crunchy.global_error_handlers import (
     on_http_error,
     on_missing_permissions_error,
 )
+
+logging.basicConfig(level=logging.INFO)
 
 app = CommandHandler(
     application_id=config.APPLICATION_ID,

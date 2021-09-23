@@ -13,7 +13,7 @@ from roid import (
 )
 from roid.components import SelectOption
 from roid.exceptions import AbortInvoke
-from roid.objects import CompletedOption, PartialMessage, ResponseFlags
+from roid.objects import CompletedOption, PartialMessage, ResponseFlags, ResponseType
 from roid.interactions import OptionData, Interaction, CommandType
 
 from crunchy.app import CommandHandler
@@ -103,13 +103,14 @@ async def search_anime_from_message(
     )
 
     select_options = [
-        SelectOption(label=title, value=str(i)) for i, (title, _) in enumerate(embeds)
+        SelectOption(label=title, value=str(i), default=i == 0)
+        for i, (title, _) in enumerate(embeds)
     ]
 
     return Response(
         embed=embeds[0][1],
         components=[
-            select_other_results.with_options(*select_options),
+            select_other_results.with_options(select_options),
             [close],
         ],
         component_context={
@@ -142,13 +143,16 @@ async def select_other_results(ctx: InvokeContext, index: str):
             to a int.
     """
     index = int(index)
-    embeds = ctx["embeds"]
+    embeds: List[EntityAndEmbed] = ctx["embeds"]
     select_options = ctx["select_options"]
+
+    option = select_options.pop(index)
+    select_options.insert(0, option)
 
     return Response(
         embed=embeds[index][1],
         components=[
-            select_other_results.with_options(*select_options),
+            select_other_results.with_options(select_options),
             [close],
         ],
         component_context={

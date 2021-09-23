@@ -30,5 +30,3 @@ class CommandHandler(SlashCommands):
 
         self.on_event("shutdown")(self.http.shutdown)
         self.on_event("shutdown")(self.client.shutdown)
-
-
