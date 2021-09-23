@@ -395,7 +395,7 @@ idna2008 = ["idna"]
 
 [[package]]
 name = "roid"
-version = "0.5.2"
+version = "0.6.0"
 description = "A fast, stateless http slash commands framework for scale. Built by the Crunchy bot team."
 category = "main"
 optional = false
@@ -485,7 +485,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "4a880b12c17e4d2c3ea9b2bce17aa555e755982d488013df4c1b2fca5d1c42a0"
+content-hash = "9448882a8582aebe8bc063305c8fdc21497cdb24b0c1d70d0fca3a9f1a60a566"
 
 [metadata.files]
 aiohttp = [
@@ -828,7 +828,7 @@ rfc3986 = [
     {file = "rfc3986-1.5.0.tar.gz", hash = "sha256:270aaf10d87d0d4e095063c65bf3ddbc6ee3d0b226328ce21e036f946e421835"},
 ]
 roid = [
-    {file = "roid-0.5.2.tar.gz", hash = "sha256:55f266dfede435811a5077d5dabae4d288f028723a0f78aa71b4e35e54e2106b"},
+    {file = "roid-0.6.0.tar.gz", hash = "sha256:7e1fd1b3a03eecfc30167b83897aeb047d4713a6197ffc950573bfe5889f8922"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
