@@ -111,7 +111,6 @@ async def search_anime_from_message(
         embed=embeds[0][1],
         components=[
             select_other_results.with_options(select_options),
-            [close],
         ],
         component_context={
             "embeds": embeds,
@@ -121,13 +120,35 @@ async def search_anime_from_message(
     )
 
 
-@search_blueprint.button(
-    label="Close",
-    style=ButtonStyle.DANGER,
-    oneshot=True,
+@search_blueprint.command(
+    "Search Manga",
+    type=CommandType.MESSAGE,
 )
-async def close():
-    return Response(delete_parent=True)
+async def search_anime_from_message(
+    app: CommandHandler,
+    interaction: Interaction,
+    message: PartialMessage,
+):
+    embeds = await get_best_manga_results(
+        app=app, interaction=interaction, query=message.content
+    )
+
+    select_options = [
+        SelectOption(label=title, value=str(i), default=i == 0)
+        for i, (title, _) in enumerate(embeds)
+    ]
+
+    return Response(
+        embed=embeds[0][1],
+        components=[
+            select_other_results.with_options(select_options),
+        ],
+        component_context={
+            "embeds": embeds,
+            "select_options": select_options,
+            "ttl": timedelta(minutes=2),
+        },
+    )
 
 
 @search_blueprint.select(placeholder="Other Results")
@@ -153,7 +174,6 @@ async def select_other_results(ctx: InvokeContext, index: str):
         embed=embeds[index][1],
         components=[
             select_other_results.with_options(select_options),
-            [close],
         ],
         component_context={
             "ttl": timedelta(minutes=2),
