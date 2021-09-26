@@ -9,7 +9,6 @@ from roid import (
     Embed,
     InvokeContext,
     Option,
-    ButtonStyle,
 )
 from roid.components import SelectOption
 from roid.exceptions import AbortInvoke
@@ -37,8 +36,14 @@ async def search_anime(
         autocomplete=True,
     ),
 ):
-    embeds = await get_best_anime_results(app=app, interaction=interaction, query=query)
-    return Response(embed=embeds[0][1])
+    results = await app.client.request(
+        "GET",
+        f"/data/anime/{query}",
+    )
+    data = results["data"]
+
+    _, embed = make_anime_embed(interaction, data)
+    return Response(embed=embed)
 
 
 @search_anime.autocomplete
@@ -69,8 +74,14 @@ async def search_manga(
         autocomplete=True,
     ),
 ):
-    embeds = await get_best_manga_results(app=app, interaction=interaction, query=query)
-    return Response(embed=embeds[0][1])
+    results = await app.client.request(
+        "GET",
+        f"/data/manga/{query}",
+    )
+    data = results["data"]
+
+    _, embed = make_manga_embed(interaction, data)
+    return Response(embed=embed)
 
 
 @search_manga.autocomplete
@@ -208,7 +219,7 @@ def make_base_embed(
     rating = int(data["rating"] / 2)
     img_url = data["img_url"]
 
-    stars = "\⭐" * rating
+    stars = "⭐" * rating
     genres = ", ".join(genres or ["None"])
 
     embed = Embed(color=EMBED_COLOUR)

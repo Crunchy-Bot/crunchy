@@ -6,7 +6,7 @@ authors = ["Harrison Burt <57491488+ChillFish8@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-roid = "^0.7.0"
+roid = "0.7.0"
 uvicorn = "^0.15.0"
 orjson = "^3.6.3"
 
