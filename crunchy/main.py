@@ -3,7 +3,7 @@ import logging
 
 from roid.exceptions import DiscordServerError, Forbidden, HTTPException
 
-from crunchy.commands import events_blueprint, search_blueprint
+from crunchy.commands import events_blueprint, search_blueprint, tracking_blueprint
 from crunchy.app import CommandHandler
 from crunchy import config
 from crunchy.tools.api import CrunchyApiHTTPException
@@ -31,6 +31,7 @@ app.register_error(HTTPException, on_http_error)
 
 app.add_blueprint(events_blueprint)
 app.add_blueprint(search_blueprint)
+app.add_blueprint(tracking_blueprint)
 
 
 def main():

@@ -17,6 +17,7 @@ from roid.interactions import OptionData, Interaction, CommandType
 
 from crunchy.app import CommandHandler
 from crunchy.config import EMBED_COLOUR, RANDOM_THUMBNAILS
+from crunchy.tools.api import CrunchyApiHTTPException
 
 search_blueprint = CommandsBlueprint()
 
@@ -36,11 +37,15 @@ async def search_anime(
         autocomplete=True,
     ),
 ):
-
-    data = await app.client.request(
-        "GET",
-        f"/data/anime/{query}",
-    )
+    try:
+        data = await app.client.request(
+            "GET",
+            f"/data/anime/{query}",
+        )
+    except CrunchyApiHTTPException as e:
+        if e.status_code == 404:
+            return Response(content="Oops! I couldn't find anything for that query!")
+        raise e
 
     _, embed = make_manga_embed(interaction, data['data'])
     return Response(embed=embed)
@@ -74,10 +79,15 @@ async def search_manga(
         autocomplete=True,
     ),
 ):
-    data = await app.client.request(
-        "GET",
-        f"/data/manga/{query}",
-    )
+    try:
+        data = await app.client.request(
+            "GET",
+            f"/data/manga/{query}",
+        )
+    except CrunchyApiHTTPException as e:
+        if e.status_code == 404:
+            return Response(content="Oops! I couldn't find anything for that query!")
+        raise e
 
     _, embed = make_manga_embed(interaction, data['data'])
     return Response(embed=embed)
