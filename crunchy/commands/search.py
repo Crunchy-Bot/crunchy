@@ -36,8 +36,14 @@ async def search_anime(
         autocomplete=True,
     ),
 ):
-    embeds = await get_best_anime_results(app=app, interaction=interaction, query=query)
-    return Response(embed=embeds[0][1])
+
+    data = await app.client.request(
+        "GET",
+        f"/data/anime/{query}",
+    )
+
+    _, embed = make_manga_embed(interaction, data['data'])
+    return Response(embed=embed)
 
 
 @search_anime.autocomplete
@@ -68,8 +74,13 @@ async def search_manga(
         autocomplete=True,
     ),
 ):
-    embeds = await get_best_manga_results(app=app, interaction=interaction, query=query)
-    return Response(embed=embeds[0][1])
+    data = await app.client.request(
+        "GET",
+        f"/data/manga/{query}",
+    )
+
+    _, embed = make_manga_embed(interaction, data['data'])
+    return Response(embed=embed)
 
 
 @search_manga.autocomplete
