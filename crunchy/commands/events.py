@@ -6,7 +6,7 @@ from roid import (
     ResponseFlags,
     Interaction,
     ButtonStyle,
-    InvokeContext,
+    InvokeContext, Option,
 )
 from roid.objects import Channel, ChannelType, MemberPermissions as MemberPerms
 from roid.helpers import check, require_user_permissions
@@ -31,44 +31,6 @@ class EventType(Enum):
 
 
 events_blueprint = CommandsBlueprint()
-
-
-async def check_channel_type(interaction: Interaction):
-    """
-    Checks if the mentioned channel type is correct or not.
-
-    If it's not then a error message is raised and returned back to the user.
-    """
-
-    if interaction.data.options is None:
-        raise NOT_ENOUGH_DATA
-
-    resolved = interaction.data.resolved
-    if resolved is None:
-        raise NOT_ENOUGH_DATA
-
-    for option in interaction.data.options:
-        try:
-            channel = resolved.channels[int(option.value)]
-            break
-        except (KeyError, ValueError):
-            raise AbortInvoke(
-                content="<:HimeSad:676087829557936149> Oops! You've given me the wrong data, I need a channel mention.",
-                flags=ResponseFlags.EPHEMERAL,
-            )
-    else:
-        raise NOT_ENOUGH_DATA
-
-    if channel.type != ChannelType.GUILD_TEXT:
-        raise AbortInvoke(
-            content=(
-                "<:HimeSad:676087829557936149> Oops! I cant add a webhook to "
-                "this channel. Make sure it's a guild text channel and not a thread or direct message."
-            ),
-            flags=ResponseFlags.EPHEMERAL,
-        )
-
-    return interaction
 
 
 async def get_webhook_url(
@@ -143,7 +105,6 @@ async def submit_webhook(
 
 
 @require_user_permissions(REQUIRED_PERMISSIONS)
-@check(check_channel_type)
 @events_blueprint.command(
     "add-news-channel",
     description=(
@@ -155,7 +116,7 @@ async def submit_webhook(
 async def add_news_channel(
     app: CommandHandler,
     interaction: Interaction,
-    channel: Channel,
+    channel: Channel = Option(channel_types=[ChannelType.GUILD_TEXT]),
 ) -> Response:
     url = await get_webhook_url(
         app=app,
@@ -182,7 +143,6 @@ async def add_news_channel(
 
 
 @require_user_permissions(REQUIRED_PERMISSIONS)
-@check(check_channel_type)
 @events_blueprint.command(
     "add-release-channel",
     description=(
@@ -194,7 +154,7 @@ async def add_news_channel(
 async def add_release_channel(
     app: CommandHandler,
     interaction: Interaction,
-    channel: Channel,
+    channel: Channel = Option(channel_types=[ChannelType.GUILD_TEXT]),
 ) -> Response:
     url = await get_webhook_url(
         app=app,

@@ -9,7 +9,6 @@ from roid import (
     Embed,
     InvokeContext,
     Option,
-    ButtonStyle,
 )
 from roid.components import SelectOption
 from roid.exceptions import AbortInvoke
