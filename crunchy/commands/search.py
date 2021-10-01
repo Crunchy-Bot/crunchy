@@ -208,7 +208,7 @@ def make_base_embed(
     Returns:
         A discord embed object. With the original entity title.
     """
-    title = data["title_english"] or data["title"]
+    title = data.get("title_english") or data["title"]
 
     if data["title_japanese"] is not None:
         title = f"{title} ({data['title_japanese']})"
