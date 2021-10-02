@@ -49,7 +49,7 @@ class CrunchyApi:
                         data = data.decode("utf-8")
 
                     if r.status_code >= 500:
-                        raise CrunchyApiHTTPException(r, data.decode("utf-8"))
+                        raise CrunchyApiHTTPException(r, data)
 
                     if 300 > r.status_code >= 200:
                         _log.debug(f"{method} {url} successful response: {data}")
